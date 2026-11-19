@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MenuMotion Demo Menu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Noto+Sans:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* Enamel-plate white, kopitiam jade tiles, turmeric highlight, chili red only for spice. */
+  --plate:#F3F6F4; --card:#FFFFFF; --ink:#15201E; --muted:#56655F; --line:#D6E0DB;
+  --jade:#0E6B5C; --jade-deep:#094A40; --turmeric:#F2B632; --chili:#C33326; --note:#FFF3D1;
+  --display:"Bricolage Grotesque","Noto Sans SC",system-ui,sans-serif;
+  --body:"Noto Sans","Noto Sans SC",system-ui,sans-serif;
+  /* Layout: one phone-width column; dish list; bottom sheet for detail; full-screen order view for the stall owner. */
+  color-scheme: light;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--plate);color:var(--ink);font-family:var(--body);-webkit-text-size-adjust:100%}
+body{min-height:100%}
+button{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--turmeric);outline-offset:2px}
+.app{max-width:460px;margin:0 auto;min-height:100vh;background:var(--plate);display:flex;flex-direction:column}
+
+/* header with kopitiam tile pattern */
+header.top{color:#fff;padding:14px 16px 16px;
+  background:repeating-conic-gradient(var(--jade) 0 25%, #0C5F52 0 50%) 0 0/20px 20px;}
+.brand{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.mark{font-family:var(--display);font-weight:800;font-size:13px;letter-spacing:.06em;text-transform:uppercase;
+  background:rgba(0,0,0,.25);padding:4px 8px;border-radius:6px}
+.stall{margin:12px 0 2px;font-family:var(--display);font-weight:800;font-size:28px;line-height:1.1;text-wrap:balance}
+.stall-sub{margin:0;font-size:14px;opacity:.92}
+.langs{display:flex;background:rgba(0,0,0,.28);border-radius:999px;padding:3px;gap:2px}
+.langs button{border:0;background:transparent;color:#fff;padding:6px 11px;border-radius:999px;font-size:13px;font-weight:600;cursor:pointer;min-width:44px}
+.langs button[aria-pressed="true"]{background:#fff;color:var(--jade-deep)}
+
+.notice{margin:12px 16px 0;padding:10px 12px;background:var(--note);border:1px solid #EBCB75;border-radius:10px;font-size:13px;line-height:1.45;color:#5A4206}
+.notice b{color:#3E2D02}
+.hint{margin:14px 16px 4px;font-size:14px;color:var(--muted)}
+
+nav.cats{display:flex;gap:8px;overflow-x:auto;padding:6px 16px 4px;scrollbar-width:none}
+nav.cats::-webkit-scrollbar{display:none}
+nav.cats button{flex:0 0 auto;border:1px solid var(--line);background:var(--card);border-radius:999px;padding:7px 14px;font-size:14px;font-weight:600;cursor:pointer}
+nav.cats button[aria-pressed="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
+
+main{padding:8px 16px 24px;display:grid;gap:14px}
+.card{display:grid;grid-template-columns:118px 1fr;gap:12px;align-items:stretch;background:var(--card);border:1px solid var(--line);
+  border-radius:14px;padding:10px;text-align:left;cursor:pointer;width:100%}
+.card:hover{border-color:#AFC3BB}
+.media{position:relative;border-radius:10px;overflow:hidden;background:#E7EEEA;aspect-ratio:1/1}
+.media video,.media img{width:100%;height:100%;object-fit:cover;display:block}
+.slot{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;
+  border:2px dashed #B9CBC4;border-radius:10px;color:var(--muted);text-align:center;padding:8px;font-size:11px;line-height:1.3}
+.slot svg{width:42px;height:42px}
+.badge{position:absolute;left:6px;bottom:6px;background:rgba(21,32,30,.78);color:#fff;font-size:10px;font-weight:600;padding:3px 6px;border-radius:6px}
+.info{display:flex;flex-direction:column;gap:4px;min-width:0}
+.no{font-size:12px;font-weight:600;color:var(--jade)}
+.dname{font-family:var(--display);font-weight:800;font-size:19px;line-height:1.15;margin:0;text-wrap:balance}
+.dsub{font-size:13px;color:var(--muted);margin:0}
+.row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:auto;flex-wrap:wrap}
+.price{font-variant-numeric:tabular-nums;font-weight:700;font-size:16px}
+.sample{font-size:10px;font-weight:600;color:#7A5A06;background:var(--note);border-radius:5px;padding:1px 5px;margin-left:4px;vertical-align:2px}
+.spice{display:inline-flex;align-items:center;gap:2px}
+.spice svg{width:14px;height:14px}
+.spice .lbl{font-size:12px;color:var(--muted);margin-left:4px}
+
+footer{padding:8px 16px 28px;font-size:12px;color:var(--muted);line-height:1.5}
+footer p{margin:6px 0}
+
+/* bottom sheet */
+.backdrop{position:fixed;inset:0;background:rgba(10,20,18,.5);opacity:0;pointer-events:none;transition:opacity .2s}
+.backdrop.on{opacity:1;pointer-events:auto}
+.sheet{position:fixed;left:50%;bottom:0;transform:translate(-50%,105%);width:100%;max-width:460px;max-height:92%;overflow:auto;
+  background:var(--card);border-radius:18px 18px 0 0;transition:transform .25s ease;box-shadow:0 -8px 30px rgba(0,0,0,.18)}
+.sheet.on{transform:translate(-50%,0)}
+.sheet{z-index:20}.backdrop{z-index:10}
+.grab{width:42px;height:5px;border-radius:5px;background:#C8D4CF;margin:8px auto 0}
+.sheet .big{margin:10px 16px 0;aspect-ratio:4/3}
+.sbody{padding:12px 16px 18px;display:grid;gap:12px}
+.sbody h2{font-family:var(--display);font-weight:800;font-size:26px;line-height:1.1;margin:0;text-wrap:balance}
+.local{font-size:15px;color:var(--muted);margin:2px 0 0}
+.desc{font-size:15px;line-height:1.55;margin:0}
+.facts{display:grid;gap:8px;font-size:14px}
+.fact{display:grid;grid-template-columns:110px 1fr;gap:8px}
+.fact dt{color:var(--muted);margin:0}
+.fact dd{margin:0}
+.diet{background:#EEF4F1;border-radius:10px;padding:8px 10px;font-size:13px;color:#2C3A36}
+.qty{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.step{display:flex;align-items:center;gap:10px}
+.step button{width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:#fff;font-size:20px;cursor:pointer}
+.step output{min-width:26px;text-align:center;font-weight:700;font-size:18px;font-variant-numeric:tabular-nums}
+.opts{display:flex;gap:8px;flex-wrap:wrap}
+.opts button{border:1px solid var(--line);background:#fff;border-radius:999px;padding:7px 12px;font-size:14px;cursor:pointer}
+.opts button[aria-pressed="true"]{background:var(--jade);color:#fff;border-color:var(--jade)}
+.cta{border:0;background:var(--jade);color:#fff;font-weight:700;font-size:17px;padding:15px;border-radius:12px;cursor:pointer;width:100%}
+.cta:hover{background:var(--jade-deep)}
+.ghost{border:0;background:transparent;color:var(--muted);text-decoration:underline;font-size:13px;cursor:pointer;padding:4px 0;justify-self:start}
+.close{position:absolute;z-index:3;right:12px;top:12px;width:38px;height:38px;border-radius:50%;border:0;background:rgba(255,255,255,.92);font-size:20px;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+
+/* full-screen order view for the stall owner */
+.order{position:fixed;inset:0;background:var(--jade-deep);color:#fff;display:none;flex-direction:column;justify-content:center;
+  align-items:center;text-align:center;padding:24px;gap:10px;z-index:30}
+.order.on{display:flex}
+.order .say{font-size:15px;opacity:.85;margin:0}
+.order .ono{font-size:16px;font-weight:700;background:var(--turmeric);color:var(--ink);padding:4px 12px;border-radius:999px}
+.order .zh{font-family:"Noto Sans SC",sans-serif;font-weight:700;font-size:clamp(48px,15vw,84px);line-height:1.05;margin:6px 0 0}
+.order .ms{font-family:var(--display);font-weight:800;font-size:clamp(30px,9vw,48px);line-height:1.1;margin:0}
+.order .oopts{font-size:22px;font-weight:600;margin:6px 0 0;line-height:1.4}
+.order .en{font-size:14px;opacity:.85;max-width:34ch;margin:10px 0 0;line-height:1.45}
+.order .done{margin-top:18px;border:2px solid #fff;background:transparent;color:#fff;font-weight:700;font-size:16px;padding:12px 30px;border-radius:999px;cursor:pointer}
+
+@media (prefers-reduced-motion: reduce){ .sheet,.backdrop{transition:none} }
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <div class="brand">
+      <span class="mark">MenuMotion</span>
+      <div class="langs" role="group" aria-label="Language">
+        <button type="button" data-lang="zh" lang="zh">中文</button>
+        <button type="button" data-lang="en" lang="en">EN</button>
+        <button type="button" data-lang="ms" lang="ms">BM</button>
+      </div>
+    </div>
+    <h1 class="stall" id="stall"></h1>
+    <p class="stall-sub" id="stallSub"></p>
+  </header>
+  <p class="notice" id="notice"></p>
+  <p class="hint" id="hint"></p>
+  <nav class="cats" id="cats" aria-label="Categories"></nav>
+  <main id="list"></main>
+  <footer id="foot"></footer>
+</div>
+
+<div class="backdrop" id="backdrop"></div>
+<section class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sTitle" hidden></section>
+<section class="order" id="order" role="dialog" aria-modal="true" aria-label="Order screen"></section>
+<input type="file" id="picker" accept="video/*,image/*" hidden>
+
+<script>
+// ---------- UI text in three languages ----------
+const T = {
+  stall:{en:"Demo Stall · SS15",zh:"演示摊位 · SS15",ms:"Gerai Demo · SS15"},
+  stallSub:{en:"Noodles, rice and drinks · Subang Jaya",zh:"面食、饭类与饮料 · 梳邦再也",ms:"Mi, nasi dan minuman · Subang Jaya"},
+  notice:{en:"<b>Prototype demo.</b> Dishes, prices and translations are samples. Before launch they are replaced by a partner stall’s menu, checked by the owner and native speakers.",
+          zh:"<b>原型演示。</b>菜品、价格和翻译均为示例；正式上线前会换成合作摊位的菜单，并由老板和母语者核对。",
+          ms:"<b>Demo prototaip.</b> Hidangan, harga dan terjemahan ialah contoh. Sebelum dilancarkan, ia diganti dengan menu gerai rakan kongsi yang disemak oleh pemilik dan penutur asli."},
+  hint:{en:"Tap a dish to see it move, then show your order to the stall.",zh:"点一下菜品看看它的样子，再把点餐画面给老板看。",ms:"Ketik hidangan untuk melihatnya bergerak, kemudian tunjukkan pesanan anda kepada peniaga."},
+  all:{en:"All",zh:"全部",ms:"Semua"},
+  noodles:{en:"Noodles",zh:"面类",ms:"Mi"},
+  rice:{en:"Rice",zh:"饭类",ms:"Nasi"},
+  breads:{en:"Breads & drinks",zh:"煎饼与饮料",ms:"Roti & minuman"},
+  no:{en:"No.",zh:"编号",ms:"No."},
+  sample:{en:"sample",zh:"示例",ms:"contoh"},
+  aiLabel:{en:"AI-animated from real photo",zh:"真实照片 AI 动态",ms:"Animasi AI daripada foto sebenar"},
+  realPhoto:{en:"Real photo",zh:"实拍照片",ms:"Foto sebenar"},
+  slot:{en:"Clip coming: real dish photo → 5-second clip",zh:"短片待补：真实菜品照片 → 5 秒短片",ms:"Klip akan datang: foto sebenar → klip 5 saat"},
+  spice:{en:"Spice level",zh:"辣度",ms:"Tahap pedas"},
+  spiceLv:{en:["Not spicy","Mild","Medium","Hot"],zh:["不辣","微辣","中辣","大辣"],ms:["Tidak pedas","Sedikit pedas","Sederhana","Sangat pedas"]},
+  allergens:{en:"May contain",zh:"可能含有",ms:"Mungkin mengandungi"},
+  diet:{en:"Dietary and halal status: please confirm with the stall. The owner fills this in before launch.",zh:"饮食与清真状况：请向摊位确认；正式上线前由老板填写。",ms:"Status pemakanan dan halal: sila sahkan dengan gerai. Pemilik akan mengisinya sebelum pelancaran."},
+  price:{en:"Price",zh:"价格",ms:"Harga"},
+  priceNote:{en:"Sample price for the demo. Live menus show “verified by owner” with a date.",zh:"演示用示例价格；正式菜单会标注“老板已核实”及日期。",ms:"Harga contoh untuk demo. Menu sebenar memaparkan “disahkan pemilik” beserta tarikh."},
+  qty:{en:"Quantity",zh:"数量",ms:"Kuantiti"},
+  options:{en:"Requests",zh:"备注",ms:"Permintaan"},
+  show:{en:"Show to order",zh:"出示给老板点餐",ms:"Tunjuk untuk pesan"},
+  presenter:{en:"Presenter: load a clip or photo from this phone",zh:"演示者：从本手机载入短片或照片",ms:"Penyampai: muat klip atau foto dari telefon ini"},
+  close:{en:"Close",zh:"关闭",ms:"Tutup"},
+  orderSay:{en:"Please show this screen to the stall",zh:"请把这个画面给老板看",ms:"Sila tunjukkan skrin ini kepada peniaga"},
+  youOrder:{en:"You are ordering",zh:"你点的是",ms:"Anda memesan"},
+  done:{en:"Done",zh:"完成",ms:"Selesai"},
+  foot1:{en:"Clips are animated only from this stall’s own dish photos and approved by the owner. No app needed.",zh:"短片只用本摊位自己的菜品照片制作，并经老板确认。无需下载应用。",ms:"Klip hanya dianimasikan daripada foto hidangan gerai ini sendiri dan diluluskan pemilik. Tiada aplikasi diperlukan."},
+  foot2:{en:"MenuMotion prototype · BUS60304 Individual Business Plan",zh:"MenuMotion 原型 · BUS60304 个人商业计划",ms:"Prototaip MenuMotion · Pelan Perniagaan Individu BUS60304"},
+};
+const ALG = {gluten:{en:"Gluten (wheat)",zh:"麸质（小麦）",ms:"Gluten (gandum)"},fish:{en:"Fish",zh:"鱼",ms:"Ikan"},egg:{en:"Egg",zh:"蛋",ms:"Telur"},
+  peanut:{en:"Peanuts",zh:"花生",ms:"Kacang tanah"},shellfish:{en:"Shellfish",zh:"贝类海鲜",ms:"Kerang-kerangan"},soy:{en:"Soy",zh:"大豆",ms:"Soya"},milk:{en:"Milk",zh:"奶",ms:"Susu"}};
+const OPT = {lessSpicy:{en:"Less spicy",zh:"少辣",ms:"Kurang pedas"},noChili:{en:"No chili",zh:"不要辣",ms:"Tanpa cili"},takeaway:{en:"Takeaway",zh:"打包",ms:"Bungkus"},
+  lessSweet:{en:"Less sweet",zh:"少甜",ms:"Kurang manis"},iced:{en:"Iced",zh:"冰",ms:"Ais"}};
+
+// ---------- sample dishes (replace with the partner stall's verified menu) ----------
+// media: put real files next to this page, e.g. {video:"media/pan-mee.mp4", poster:"media/pan-mee.jpg"}
+const DISHES = [
+ {id:"pan-mee",no:1,cat:"noodles",price:10.90,spice:0,allergens:["gluten","fish","egg"],options:["noChili","takeaway"],media:{},
+  name:{en:"Pan Mee",zh:"板面",ms:"Pan Mee"},sub:{en:"Hand-torn noodle soup",zh:"手撕面汤",ms:"Mi sup cubit"},
+  desc:{en:"Hand-torn flour noodles in anchovy broth with minced meat, mushrooms, crispy anchovies, sweet potato leaves and a soft egg. Chili paste comes on the side.",
+        zh:"手撕面片配江鱼仔汤底，加肉碎、香菇、炸江鱼仔、番薯叶和半熟蛋，辣椒酱另放。",
+        ms:"Mi tepung dicubit dalam sup ikan bilis dengan daging cincang, cendawan, ikan bilis goreng, pucuk ubi keledek dan telur separuh masak. Sambal cili diasingkan."}},
+ {id:"curry-mee",no:2,cat:"noodles",price:11.90,spice:2,allergens:["gluten","soy","shellfish"],options:["lessSpicy","takeaway"],media:{},
+  name:{en:"Curry Mee",zh:"咖喱面",ms:"Mi Kari"},sub:{en:"Coconut curry noodle soup",zh:"椰浆咖喱汤面",ms:"Mi dalam kuah kari santan"},
+  desc:{en:"Yellow noodles and rice vermicelli in coconut curry broth with chicken, tofu puffs, long beans and cockles.",
+        zh:"黄面和米粉配椰浆咖喱汤，加鸡肉、豆卜、长豆和鲜蛤。",
+        ms:"Mi kuning dan bihun dalam kuah kari santan dengan ayam, tauhu pok, kacang panjang dan kerang."}},
+ {id:"char-kway-teow",no:3,cat:"noodles",price:11.50,spice:1,allergens:["shellfish","egg","soy"],options:["lessSpicy","noChili","takeaway"],media:{},
+  name:{en:"Char Kway Teow",zh:"炒粿条",ms:"Char Kuey Teow"},sub:{en:"Wok-fried flat rice noodles",zh:"大火炒宽河粉",ms:"Kuey teow goreng"},
+  desc:{en:"Flat rice noodles wok-fried with prawns, cockles, bean sprouts, egg and chives in dark soy sauce.",
+        zh:"宽河粉以黑酱油大火快炒，配虾、鲜蛤、豆芽、鸡蛋和韭菜。",
+        ms:"Kuey teow digoreng dengan udang, kerang, taugeh, telur dan kucai dalam kicap pekat."}},
+ {id:"nasi-lemak",no:4,cat:"rice",price:12.90,spice:2,allergens:["peanut","fish","egg"],options:["lessSpicy","takeaway"],media:{},
+  name:{en:"Nasi Lemak Ayam Berempah",zh:"椰浆饭配香料炸鸡",ms:"Nasi Lemak Ayam Berempah"},sub:{en:"Coconut rice with spiced fried chicken",zh:"椰浆饭 · 香料炸鸡",ms:"Nasi santan dengan ayam goreng berempah"},
+  desc:{en:"Coconut rice with spiced fried chicken, sambal, fried anchovies, peanuts, egg and cucumber.",
+        zh:"椰浆饭配香料炸鸡、叁巴辣酱、炸江鱼仔、花生、鸡蛋和黄瓜。",
+        ms:"Nasi santan dengan ayam goreng berempah, sambal, ikan bilis goreng, kacang, telur dan timun."}},
+ {id:"roti-canai",no:5,cat:"breads",price:4.00,spice:1,allergens:["gluten","milk"],options:["takeaway"],media:{},
+  name:{en:"Roti Canai (2 pcs)",zh:"印度煎饼（2片）",ms:"Roti Canai (2 keping)"},sub:{en:"Flaky flatbread with dhal and curry",zh:"香脆煎饼配豆咖喱",ms:"Roti rangup bersama kuah dal dan kari"},
+  desc:{en:"Two pieces of flaky griddled flatbread with lentil dhal and curry sauce for dipping.",
+        zh:"两片香脆煎饼，配扁豆咖喱和咖喱汁蘸食。",
+        ms:"Dua keping roti canai rangup dengan kuah dal dan kari untuk dicicah."}},
+ {id:"teh-tarik",no:6,cat:"breads",price:3.20,spice:0,allergens:["milk"],options:["lessSweet","iced","takeaway"],media:{},
+  name:{en:"Teh Tarik",zh:"拉茶",ms:"Teh Tarik"},sub:{en:"Pulled milk tea",zh:"印度拉茶（奶茶）",ms:"Teh susu ditarik"},
+  desc:{en:"Strong black tea and condensed milk, poured between two jugs until frothy. Ask for less sweet if you prefer.",
+        zh:"浓红茶加炼奶，在两个杯子间来回拉出泡沫，可以要求少甜。",
+        ms:"Teh hitam pekat dan susu pekat manis, dituang antara dua jag hingga berbuih. Boleh minta kurang manis."}},
+];
+
+// ---------- state ----------
+const reduceMotion = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+let lang = (()=>{ try{ const s=localStorage.getItem("mm-lang"); if(s) return s; }catch(e){}
+  const n=(navigator.language||"en").toLowerCase(); return n.startsWith("zh")?"zh":(n.startsWith("ms")||n.startsWith("id"))?"ms":"en"; })();
+let cat = "all", current = null, qty = 1, picked = new Set();
+const $ = s => document.querySelector(s);
+const tx = k => (T[k] && T[k][lang]) || "";
+const rm = v => "RM " + v.toFixed(2);
+
+const chili = on => `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 4.5c1.6-.8 3.2-.4 3.8.6M18 5c1.4 1.8 1.6 4.6.4 7.2-1.6 3.6-5.8 7-10.6 7.8-1.6.3-2.6-.9-1.3-2 3.4-2.8 5.6-6.2 6.4-10 .3-1.6 2.6-3 5.1-3z" fill="${on?"var(--chili)":"none"}" stroke="${on?"var(--chili)":"#AEBDB7"}" stroke-width="1.6" stroke-linejoin="round"/></svg>`;
+const bowl = `<svg viewBox="0 0 48 48" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 24h36c0 9-8 15-18 15S6 33 6 24z"/><path d="M18 39l-2 4h16l-2-4"/><path d="M17 17c0-3 3-3 3-6M24 17c0-3 3-3 3-6M31 17c0-3 3-3 3-6" stroke-linecap="round"/></svg>`;
+
+function mediaHTML(d, big){
+  const m = d.media || {};
+  if (m.video) return `<video src="${m.video}" ${m.poster?`poster="${m.poster}"`:""} muted loop playsinline ${reduceMotion?"controls":"autoplay"}></video><span class="badge">${tx("aiLabel")}</span>`;
+  if (m.poster) return `<img src="${m.poster}" alt=""><span class="badge">${tx("realPhoto")}</span>`;
+  return `<div class="slot">${bowl}<span>${tx("slot")}</span></div>`;
+}
+function spiceHTML(n, withLabel){
+  let s = ""; for (let i=1;i<=3;i++) s += chili(i<=n);
+  return `<span class="spice" aria-label="${tx("spice")}: ${T.spiceLv[lang][n]}">${s}${withLabel?`<span class="lbl">${T.spiceLv[lang][n]}</span>`:""}</span>`;
+}
+
+function render(){
+  document.documentElement.lang = lang === "zh" ? "zh-Hans" : lang;
+  document.querySelectorAll(".langs button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.lang === lang)));
+  $("#stall").textContent = tx("stall"); $("#stallSub").textContent = tx("stallSub");
+  $("#notice").innerHTML = tx("notice"); $("#hint").textContent = tx("hint");
+  $("#cats").innerHTML = ["all","noodles","rice","breads"].map(c => `<button type="button" data-cat="${c}" aria-pressed="${c===cat}">${tx(c)}</button>`).join("");
+  $("#list").innerHTML = DISHES.filter(d => cat==="all" || d.cat===cat).map(d => `
+    <button type="button" class="card" data-id="${d.id}">
+      <div class="media">${mediaHTML(d)}</div>
+      <div class="info">
+        <span class="no">${tx("no")} ${d.no}</span>
+        <h2 class="dname">${d.name[lang]}</h2>
+        <p class="dsub">${d.sub[lang]}</p>
+        <div class="row"><span class="price">${rm(d.price)}<span class="sample">${tx("sample")}</span></span>${spiceHTML(d.spice,false)}</div>
+      </div>
+    </button>`).join("");
+  $("#foot").innerHTML = `<p>${tx("foot1")}</p><p>${tx("foot2")}</p>`;
+  if (current) renderSheet();
+}
+
+function renderSheet(){
+  const d = current;
+  $("#sheet").innerHTML = `
+    <div class="grab" aria-hidden="true"></div>
+    <button type="button" class="close" id="sClose" aria-label="${tx("close")}">×</button>
+    <div class="media big">${mediaHTML(d,true)}</div>
+    <div class="sbody">
+      <div><span class="no">${tx("no")} ${d.no}</span><h2 id="sTitle">${d.name[lang]}</h2>
+        <p class="local">${[d.name.zh, d.name.ms].filter(n => n !== d.name[lang]).join(" · ")}</p></div>
+      <p class="desc">${d.desc[lang]}</p>
+      <dl class="facts">
+        <div class="fact"><dt>${tx("spice")}</dt><dd>${spiceHTML(d.spice,true)}</dd></div>
+        <div class="fact"><dt>${tx("allergens")}</dt><dd>${d.allergens.map(a => ALG[a][lang]).join(", ")}</dd></div>
+        <div class="fact"><dt>${tx("price")}</dt><dd><b class="price">${rm(d.price)}</b><span class="sample">${tx("sample")}</span><br><span class="dsub">${tx("priceNote")}</span></dd></div>
+      </dl>
+      <p class="diet">${tx("diet")}</p>
+      <div class="qty"><span>${tx("qty")}</span>
+        <div class="step"><button type="button" id="minus" aria-label="−">−</button><output id="q">${qty}</output><button type="button" id="plus" aria-label="+">+</button></div></div>
+      <div><div class="dsub" style="margin-bottom:6px">${tx("options")}</div>
+        <div class="opts">${d.options.map(o => `<button type="button" data-opt="${o}" aria-pressed="${picked.has(o)}">${OPT[o][lang]}</button>`).join("")}</div></div>
+      <button type="button" class="cta" id="showOrder">${tx("show")}</button>
+      <button type="button" class="ghost" id="loadMedia">${tx("presenter")}</button>
+    </div>`;
+  const v = $("#sheet video"); if (v && !reduceMotion) v.play().catch(()=>{});
+}
+
+function openSheet(id){
+  current = DISHES.find(d => d.id === id); qty = 1; picked = new Set();
+  renderSheet();
+  const sh = $("#sheet"); sh.hidden = false;
+  requestAnimationFrame(() => { sh.classList.add("on"); $("#backdrop").classList.add("on"); });
+  setTimeout(() => { const c = $("#sClose"); if (c) c.focus(); }, 60);
+}
+function closeSheet(){
+  const sh = $("#sheet"); sh.classList.remove("on"); $("#backdrop").classList.remove("on");
+  setTimeout(() => { sh.hidden = true; const last = current && document.querySelector(`.card[data-id="${current.id}"]`); current = null; if (last) last.focus(); }, reduceMotion ? 0 : 250);
+}
+function showOrder(){
+  const d = current, opts = [...picked];
+  const zhOpts = opts.map(o => OPT[o].zh).join(" · "), msOpts = opts.map(o => OPT[o].ms).join(" · ");
+  const enLine = `${tx("youOrder")}: ${d.name[lang]} × ${qty}${opts.length ? " · " + opts.map(o => OPT[o][lang]).join(", ") : ""} · ${rm(d.price*qty)} (${tx("sample")})`;
+  $("#order").innerHTML = `
+    <p class="say">${T.orderSay.zh} · ${T.orderSay.ms}</p>
+    <span class="ono">No. ${d.no}</span>
+    <p class="zh" lang="zh">${d.name.zh} × ${qty}</p>
+    <p class="ms" lang="ms">${d.name.ms} × ${qty}</p>
+    ${opts.length ? `<p class="oopts"><span lang="zh">${zhOpts}</span><br><span lang="ms">${msOpts}</span></p>` : ""}
+    <p class="en">${enLine}</p>
+    <button type="button" class="done" id="orderDone">${tx("done")}</button>`;
+  $("#order").classList.add("on");
+  setTimeout(() => $("#orderDone").focus(), 30);
+}
+
+// ---------- events ----------
+document.addEventListener("click", e => {
+  const b = e.target.closest("button"); if (!b) { if (e.target.id === "backdrop") closeSheet(); return; }
+  if (b.dataset.lang) { lang = b.dataset.lang; try{ localStorage.setItem("mm-lang", lang); }catch(err){} render(); return; }
+  if (b.dataset.cat) { cat = b.dataset.cat; render(); return; }
+  if (b.classList.contains("card")) { openSheet(b.dataset.id); return; }
+  if (b.id === "sClose") { closeSheet(); return; }
+  if (b.id === "minus") { qty = Math.max(1, qty - 1); $("#q").textContent = qty; return; }
+  if (b.id === "plus") { qty = Math.min(20, qty + 1); $("#q").textContent = qty; return; }
+  if (b.dataset.opt) { const o = b.dataset.opt; picked.has(o) ? picked.delete(o) : picked.add(o); b.setAttribute("aria-pressed", String(picked.has(o))); return; }
+  if (b.id === "showOrder") { showOrder(); return; }
+  if (b.id === "orderDone") { $("#order").classList.remove("on"); return; }
+  if (b.id === "loadMedia") { $("#picker").click(); return; }
+});
+document.addEventListener("keydown", e => {
+  if (e.key !== "Escape") return;
+  if ($("#order").classList.contains("on")) $("#order").classList.remove("on");
+  else if (current) closeSheet();
+});
+$("#picker").addEventListener("change", e => {
+  const f = e.target.files && e.target.files[0]; if (!f || !current) return;
+  const url = URL.createObjectURL(f);
+  current.media = f.type.startsWith("video") ? {video:url} : {poster:url};
+  e.target.value = ""; render();
+});
+render();
+</script>
+</body>
+</html>
