@@ -108,6 +108,9 @@ footer p{margin:6px 0}
 .order .ono{font-size:16px;font-weight:700;background:var(--turmeric);color:var(--ink);padding:4px 12px;border-radius:999px}
 .order .zh{font-family:"Noto Sans SC",sans-serif;font-weight:700;font-size:clamp(48px,15vw,84px);line-height:1.05;margin:6px 0 0}
 .order .ms{font-family:var(--display);font-weight:800;font-size:clamp(30px,9vw,48px);line-height:1.1;margin:0}
+.order.long .zh{font-size:clamp(34px,10vw,64px)}
+.order.long .ms{font-size:clamp(24px,7vw,40px)}
+.order .x{white-space:nowrap}
 .order .oopts{font-size:22px;font-weight:600;margin:6px 0 0;line-height:1.4}
 .order .en{font-size:14px;opacity:.85;max-width:34ch;margin:10px 0 0;line-height:1.45}
 .order .done{margin-top:18px;border:2px solid #fff;background:transparent;color:#fff;font-weight:700;font-size:16px;padding:12px 30px;border-radius:999px;cursor:pointer}
@@ -146,9 +149,9 @@ footer p{margin:6px 0}
 const T = {
   stall:{en:"Demo Stall · SS15",zh:"演示摊位 · SS15",ms:"Gerai Demo · SS15"},
   stallSub:{en:"Noodles, rice and drinks · Subang Jaya",zh:"面食、饭类与饮料 · 梳邦再也",ms:"Mi, nasi dan minuman · Subang Jaya"},
-  notice:{en:"<b>Prototype demo.</b> Dishes, prices and translations are samples. Before launch they are replaced by a partner stall’s menu, checked by the owner and native speakers.",
-          zh:"<b>原型演示。</b>菜品、价格和翻译均为示例；正式上线前会换成合作摊位的菜单，并由老板和母语者核对。",
-          ms:"<b>Demo prototaip.</b> Hidangan, harga dan terjemahan ialah contoh. Sebelum dilancarkan, ia diganti dengan menu gerai rakan kongsi yang disemak oleh pemilik dan penutur asli."},
+  notice:{en:"<b>Prototype demo.</b> Dish 1 is a real stall dish: its clip is AI-animated from a real photo and its prices are real. Other dishes and prices, and all translations, are samples. Before launch they are replaced by a partner stall’s menu, checked by the owner and native speakers.",
+          zh:"<b>原型演示。</b>1 号菜来自真实摊位：短片由真实照片 AI 动态生成，价格为真实价格。其余菜品和价格以及所有翻译均为示例；正式上线前会换成合作摊位的菜单，并由老板和母语者核对。",
+          ms:"<b>Demo prototaip.</b> Hidangan 1 ialah hidangan gerai sebenar: klipnya dianimasikan AI daripada foto sebenar dan harganya sebenar. Hidangan dan harga lain, serta semua terjemahan, ialah contoh. Sebelum dilancarkan ia diganti dengan menu gerai rakan kongsi yang disemak oleh pemilik dan penutur asli."},
   hint:{en:"Tap a dish to see it move, then show your order to the stall.",zh:"点一下菜品看看它的样子，再把点餐画面给老板看。",ms:"Ketik hidangan untuk melihatnya bergerak, kemudian tunjukkan pesanan anda kepada peniaga."},
   all:{en:"All",zh:"全部",ms:"Semua"},
   noodles:{en:"Noodles",zh:"面类",ms:"Mi"},
@@ -156,6 +159,8 @@ const T = {
   breads:{en:"Breads & drinks",zh:"煎饼与饮料",ms:"Roti & minuman"},
   no:{en:"No.",zh:"编号",ms:"No."},
   sample:{en:"sample",zh:"示例",ms:"contoh"},
+  real:{en:"real price",zh:"真实价格",ms:"harga sebenar"},
+  priceNoteReal:{en:"Real price from the stall, recorded November 2026. Add-ons are charged separately.",zh:"摊位真实价格，2026 年 11 月记录；加料另计。",ms:"Harga sebenar gerai, direkod November 2026. Tambahan dikenakan caj berasingan."},
   aiLabel:{en:"AI-animated from real photo",zh:"真实照片 AI 动态",ms:"Animasi AI daripada foto sebenar"},
   realPhoto:{en:"Real photo",zh:"实拍照片",ms:"Foto sebenar"},
   slot:{en:"Clip coming: real dish photo → 5-second clip",zh:"短片待补：真实菜品照片 → 5 秒短片",ms:"Klip akan datang: foto sebenar → klip 5 saat"},
@@ -173,22 +178,24 @@ const T = {
   orderSay:{en:"Please show this screen to the stall",zh:"请把这个画面给老板看",ms:"Sila tunjukkan skrin ini kepada peniaga"},
   youOrder:{en:"You are ordering",zh:"你点的是",ms:"Anda memesan"},
   done:{en:"Done",zh:"完成",ms:"Selesai"},
-  foot1:{en:"Clips are animated only from this stall’s own dish photos and approved by the owner. No app needed.",zh:"短片只用本摊位自己的菜品照片制作，并经老板确认。无需下载应用。",ms:"Klip hanya dianimasikan daripada foto hidangan gerai ini sendiri dan diluluskan pemilik. Tiada aplikasi diperlukan."},
+  foot1:{en:"In the live service, clips are animated only from the stall’s own dish photos and approved by the owner. No app needed.",zh:"正式服务中，短片只用摊位自己的菜品照片制作，并经老板确认。无需下载应用。",ms:"Dalam perkhidmatan sebenar, klip hanya dianimasikan daripada foto hidangan gerai sendiri dan diluluskan pemilik. Tiada aplikasi diperlukan."},
   foot2:{en:"MenuMotion prototype · BUS60304 Individual Business Plan",zh:"MenuMotion 原型 · BUS60304 个人商业计划",ms:"Prototaip MenuMotion · Pelan Perniagaan Individu BUS60304"},
 };
 const ALG = {gluten:{en:"Gluten (wheat)",zh:"麸质（小麦）",ms:"Gluten (gandum)"},fish:{en:"Fish",zh:"鱼",ms:"Ikan"},egg:{en:"Egg",zh:"蛋",ms:"Telur"},
   peanut:{en:"Peanuts",zh:"花生",ms:"Kacang tanah"},shellfish:{en:"Shellfish",zh:"贝类海鲜",ms:"Kerang-kerangan"},soy:{en:"Soy",zh:"大豆",ms:"Soya"},milk:{en:"Milk",zh:"奶",ms:"Susu"}};
 const OPT = {lessSpicy:{en:"Less spicy",zh:"少辣",ms:"Kurang pedas"},noChili:{en:"No chili",zh:"不要辣",ms:"Tanpa cili"},takeaway:{en:"Takeaway",zh:"打包",ms:"Bungkus"},
-  lessSweet:{en:"Less sweet",zh:"少甜",ms:"Kurang manis"},iced:{en:"Iced",zh:"冰",ms:"Ais"}};
+  lessSweet:{en:"Less sweet",zh:"少甜",ms:"Kurang manis"},iced:{en:"Iced",zh:"冰",ms:"Ais"},
+  addChicken:{en:"Minced chicken",zh:"鸡肉碎",ms:"Ayam cincang",add:3},addEgg:{en:"Egg",zh:"鸡蛋",ms:"Telur",add:2}};
 
 // ---------- sample dishes (replace with the partner stall's verified menu) ----------
 // media: put real files next to this page, e.g. {video:"media/pan-mee.mp4", poster:"media/pan-mee.jpg"}
 const DISHES = [
- {id:"pan-mee",no:1,cat:"noodles",price:10.90,spice:0,allergens:["gluten","fish","egg"],options:["noChili","takeaway"],media:{},
-  name:{en:"Pan Mee",zh:"板面",ms:"Pan Mee"},sub:{en:"Hand-torn noodle soup",zh:"手撕面汤",ms:"Mi sup cubit"},
-  desc:{en:"Hand-torn flour noodles in anchovy broth with minced meat, mushrooms, crispy anchovies, sweet potato leaves and a soft egg. Chili paste comes on the side.",
-        zh:"手撕面片配江鱼仔汤底，加肉碎、香菇、炸江鱼仔、番薯叶和半熟蛋，辣椒酱另放。",
-        ms:"Mi tepung dicubit dalam sup ikan bilis dengan daging cincang, cendawan, ikan bilis goreng, pucuk ubi keledek dan telur separuh masak. Sambal cili diasingkan."}},
+ {id:"pan-mee",no:1,cat:"noodles",price:11.00,real:true,spice:2,allergens:["gluten","fish","egg"],options:["addChicken","addEgg","lessSpicy","takeaway"],
+  media:{video:"pan-mee.mp4",poster:"pan-mee.jpg"},
+  name:{en:"Signature Spicy Pan Mee",zh:"招牌香辣板面",ms:"Pan Mee Pedas Istimewa"},sub:{en:"Dry pan mee with chili flakes",zh:"干捞香辣板面",ms:"Pan mee kering dengan cili"},
+  desc:{en:"Dry flour noodles topped with crispy anchovies, chili flakes and spring onions. The bowl in the clip has two add-ons: minced chicken (+RM 3) and an egg on the side (+RM 2), RM 16 in total.",
+        zh:"干捞面条，铺上炸江鱼仔、辣椒碎和葱花。短片里这碗加了两样料：鸡肉碎（+RM 3）和旁边的一份鸡蛋（+RM 2），合计 RM 16。",
+        ms:"Mi tepung kering dengan ikan bilis goreng, serpihan cili dan daun bawang. Mangkuk dalam klip ada dua tambahan: ayam cincang (+RM 3) dan telur di tepi (+RM 2), jumlah RM 16."}},
  {id:"curry-mee",no:2,cat:"noodles",price:11.90,spice:2,allergens:["gluten","soy","shellfish"],options:["lessSpicy","takeaway"],media:{},
   name:{en:"Curry Mee",zh:"咖喱面",ms:"Mi Kari"},sub:{en:"Coconut curry noodle soup",zh:"椰浆咖喱汤面",ms:"Mi dalam kuah kari santan"},
   desc:{en:"Yellow noodles and rice vermicelli in coconut curry broth with chicken, tofu puffs, long beans and cockles.",
@@ -224,6 +231,9 @@ let cat = "all", current = null, qty = 1, picked = new Set();
 const $ = s => document.querySelector(s);
 const tx = k => (T[k] && T[k][lang]) || "";
 const rm = v => "RM " + v.toFixed(2);
+const tag = d => `<span class="sample">${tx(d.real ? "real" : "sample")}</span>`;
+const optLabel = o => OPT[o][lang] + (OPT[o].add ? ` +${rm(OPT[o].add)}` : "");
+const unitPrice = d => d.price + [...picked].reduce((t, o) => t + (OPT[o].add || 0), 0);
 
 const chili = on => `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 4.5c1.6-.8 3.2-.4 3.8.6M18 5c1.4 1.8 1.6 4.6.4 7.2-1.6 3.6-5.8 7-10.6 7.8-1.6.3-2.6-.9-1.3-2 3.4-2.8 5.6-6.2 6.4-10 .3-1.6 2.6-3 5.1-3z" fill="${on?"var(--chili)":"none"}" stroke="${on?"var(--chili)":"#AEBDB7"}" stroke-width="1.6" stroke-linejoin="round"/></svg>`;
 const bowl = `<svg viewBox="0 0 48 48" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 24h36c0 9-8 15-18 15S6 33 6 24z"/><path d="M18 39l-2 4h16l-2-4"/><path d="M17 17c0-3 3-3 3-6M24 17c0-3 3-3 3-6M31 17c0-3 3-3 3-6" stroke-linecap="round"/></svg>`;
@@ -252,7 +262,7 @@ function render(){
         <span class="no">${tx("no")} ${d.no}</span>
         <h2 class="dname">${d.name[lang]}</h2>
         <p class="dsub">${d.sub[lang]}</p>
-        <div class="row"><span class="price">${rm(d.price)}<span class="sample">${tx("sample")}</span></span>${spiceHTML(d.spice,false)}</div>
+        <div class="row"><span class="price">${rm(d.price)}${tag(d)}</span>${spiceHTML(d.spice,false)}</div>
       </div>
     </button>`).join("");
   $("#foot").innerHTML = `<p>${tx("foot1")}</p><p>${tx("foot2")}</p>`;
@@ -272,13 +282,13 @@ function renderSheet(){
       <dl class="facts">
         <div class="fact"><dt>${tx("spice")}</dt><dd>${spiceHTML(d.spice,true)}</dd></div>
         <div class="fact"><dt>${tx("allergens")}</dt><dd>${d.allergens.map(a => ALG[a][lang]).join(", ")}</dd></div>
-        <div class="fact"><dt>${tx("price")}</dt><dd><b class="price">${rm(d.price)}</b><span class="sample">${tx("sample")}</span><br><span class="dsub">${tx("priceNote")}</span></dd></div>
+        <div class="fact"><dt>${tx("price")}</dt><dd><b class="price">${rm(d.price)}</b>${tag(d)}<br><span class="dsub">${tx(d.real ? "priceNoteReal" : "priceNote")}</span></dd></div>
       </dl>
       <p class="diet">${tx("diet")}</p>
       <div class="qty"><span>${tx("qty")}</span>
         <div class="step"><button type="button" id="minus" aria-label="−">−</button><output id="q">${qty}</output><button type="button" id="plus" aria-label="+">+</button></div></div>
       <div><div class="dsub" style="margin-bottom:6px">${tx("options")}</div>
-        <div class="opts">${d.options.map(o => `<button type="button" data-opt="${o}" aria-pressed="${picked.has(o)}">${OPT[o][lang]}</button>`).join("")}</div></div>
+        <div class="opts">${d.options.map(o => `<button type="button" data-opt="${o}" aria-pressed="${picked.has(o)}">${optLabel(o)}</button>`).join("")}</div></div>
       <button type="button" class="cta" id="showOrder">${tx("show")}</button>
       <button type="button" class="ghost" id="loadMedia">${tx("presenter")}</button>
     </div>`;
@@ -299,15 +309,16 @@ function closeSheet(){
 function showOrder(){
   const d = current, opts = [...picked];
   const zhOpts = opts.map(o => OPT[o].zh).join(" · "), msOpts = opts.map(o => OPT[o].ms).join(" · ");
-  const enLine = `${tx("youOrder")}: ${d.name[lang]} × ${qty}${opts.length ? " · " + opts.map(o => OPT[o][lang]).join(", ") : ""} · ${rm(d.price*qty)} (${tx("sample")})`;
+  const enLine = `${tx("youOrder")}: ${d.name[lang]} × ${qty}${opts.length ? " · " + opts.map(o => OPT[o][lang]).join(", ") : ""} · ${rm(unitPrice(d)*qty)}${d.real ? "" : ` (${tx("sample")})`}`;
   $("#order").innerHTML = `
     <p class="say">${T.orderSay.zh} · ${T.orderSay.ms}</p>
     <span class="ono">No. ${d.no}</span>
-    <p class="zh" lang="zh">${d.name.zh} × ${qty}</p>
-    <p class="ms" lang="ms">${d.name.ms} × ${qty}</p>
+    <p class="zh" lang="zh">${d.name.zh} <span class="x">× ${qty}</span></p>
+    <p class="ms" lang="ms">${d.name.ms} <span class="x">× ${qty}</span></p>
     ${opts.length ? `<p class="oopts"><span lang="zh">${zhOpts}</span><br><span lang="ms">${msOpts}</span></p>` : ""}
     <p class="en">${enLine}</p>
     <button type="button" class="done" id="orderDone">${tx("done")}</button>`;
+  $("#order").classList.toggle("long", d.name.zh.length > 4 || d.name.ms.length > 14);
   $("#order").classList.add("on");
   setTimeout(() => $("#orderDone").focus(), 30);
 }
