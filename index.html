@@ -149,9 +149,9 @@ footer p{margin:6px 0}
 const T = {
   stall:{en:"Demo Stall · SS15",zh:"演示摊位 · SS15",ms:"Gerai Demo · SS15"},
   stallSub:{en:"Noodles, rice and drinks · Subang Jaya",zh:"面食、饭类与饮料 · 梳邦再也",ms:"Mi, nasi dan minuman · Subang Jaya"},
-  notice:{en:"<b>Prototype demo.</b> Dish 1 is a real stall dish: its clip is AI-animated from a real photo and its prices are real. Other dishes and prices, and all translations, are samples. Before launch they are replaced by a partner stall’s menu, checked by the owner and native speakers.",
-          zh:"<b>原型演示。</b>1 号菜来自真实摊位：短片由真实照片 AI 动态生成，价格为真实价格。其余菜品和价格以及所有翻译均为示例；正式上线前会换成合作摊位的菜单，并由老板和母语者核对。",
-          ms:"<b>Demo prototaip.</b> Hidangan 1 ialah hidangan gerai sebenar: klipnya dianimasikan AI daripada foto sebenar dan harganya sebenar. Hidangan dan harga lain, serta semua terjemahan, ialah contoh. Sebelum dilancarkan ia diganti dengan menu gerai rakan kongsi yang disemak oleh pemilik dan penutur asli."},
+  notice:{en:"<b>Prototype demo.</b> Dish 1 is a real stall dish: its clip is AI-animated from a real photo and its prices are real. Dishes 2–6 are samples: their clips are animated from AI-generated images, not photos of real dishes, and their prices are made up. All translations are samples. Before launch every dish is replaced by a partner stall’s own photos and menu, checked by the owner and native speakers.",
+          zh:"<b>原型演示。</b>1 号菜来自真实摊位：短片由真实照片 AI 动态生成，价格为真实价格。2–6 号菜为示例：短片由 AI 生成的图片制作，并非真实菜品照片，价格也是虚拟的。所有翻译均为示例。正式上线前，每道菜都会换成合作摊位自己的照片和菜单，并由老板和母语者核对。",
+          ms:"<b>Demo prototaip.</b> Hidangan 1 ialah hidangan gerai sebenar: klipnya dianimasikan AI daripada foto sebenar dan harganya sebenar. Hidangan 2–6 ialah contoh: klipnya dianimasikan daripada imej janaan AI, bukan foto hidangan sebenar, dan harganya rekaan. Semua terjemahan ialah contoh. Sebelum dilancarkan setiap hidangan diganti dengan foto dan menu gerai rakan kongsi sendiri, disemak oleh pemilik dan penutur asli."},
   hint:{en:"Tap a dish to see it move, then show your order to the stall.",zh:"点一下菜品看看它的样子，再把点餐画面给老板看。",ms:"Ketik hidangan untuk melihatnya bergerak, kemudian tunjukkan pesanan anda kepada peniaga."},
   all:{en:"All",zh:"全部",ms:"Semua"},
   noodles:{en:"Noodles",zh:"面类",ms:"Mi"},
@@ -162,6 +162,7 @@ const T = {
   real:{en:"real price",zh:"真实价格",ms:"harga sebenar"},
   priceNoteReal:{en:"Real price from the stall, recorded November 2026. Add-ons are charged separately.",zh:"摊位真实价格，2026 年 11 月记录；加料另计。",ms:"Harga sebenar gerai, direkod November 2026. Tambahan dikenakan caj berasingan."},
   aiLabel:{en:"AI-animated from real photo",zh:"真实照片 AI 动态",ms:"Animasi AI daripada foto sebenar"},
+  aiSample:{en:"Sample · AI image",zh:"示例 · AI 生成图",ms:"Contoh · imej AI"},
   realPhoto:{en:"Real photo",zh:"实拍照片",ms:"Foto sebenar"},
   slot:{en:"Clip coming: real dish photo → 5-second clip",zh:"短片待补：真实菜品照片 → 5 秒短片",ms:"Klip akan datang: foto sebenar → klip 5 saat"},
   spice:{en:"Spice level",zh:"辣度",ms:"Tahap pedas"},
@@ -182,7 +183,7 @@ const T = {
   foot2:{en:"MenuMotion prototype · BUS60304 Individual Business Plan",zh:"MenuMotion 原型 · BUS60304 个人商业计划",ms:"Prototaip MenuMotion · Pelan Perniagaan Individu BUS60304"},
 };
 const ALG = {gluten:{en:"Gluten (wheat)",zh:"麸质（小麦）",ms:"Gluten (gandum)"},fish:{en:"Fish",zh:"鱼",ms:"Ikan"},egg:{en:"Egg",zh:"蛋",ms:"Telur"},
-  peanut:{en:"Peanuts",zh:"花生",ms:"Kacang tanah"},shellfish:{en:"Shellfish",zh:"贝类海鲜",ms:"Kerang-kerangan"},soy:{en:"Soy",zh:"大豆",ms:"Soya"},milk:{en:"Milk",zh:"奶",ms:"Susu"}};
+  peanut:{en:"Peanuts",zh:"花生",ms:"Kacang tanah"},shellfish:{en:"Shellfish",zh:"贝类海鲜",ms:"Kerang-kerangan"},soy:{en:"Soy",zh:"大豆",ms:"Soya"},milk:{en:"Milk",zh:"奶",ms:"Susu"},sesame:{en:"Sesame",zh:"芝麻",ms:"Bijan"}};
 const OPT = {lessSpicy:{en:"Less spicy",zh:"少辣",ms:"Kurang pedas"},noChili:{en:"No chili",zh:"不要辣",ms:"Tanpa cili"},takeaway:{en:"Takeaway",zh:"打包",ms:"Bungkus"},
   lessSweet:{en:"Less sweet",zh:"少甜",ms:"Kurang manis"},iced:{en:"Iced",zh:"冰",ms:"Ais"},
   addChicken:{en:"Minced chicken",zh:"鸡肉碎",ms:"Ayam cincang",add:3},addEgg:{en:"Egg",zh:"鸡蛋",ms:"Telur",add:2}};
@@ -196,27 +197,27 @@ const DISHES = [
   desc:{en:"Dry flour noodles topped with crispy anchovies, chili flakes and spring onions. The bowl in the clip has two add-ons: minced chicken (+RM 3) and an egg on the side (+RM 2), RM 16 in total.",
         zh:"干捞面条，铺上炸江鱼仔、辣椒碎和葱花。短片里这碗加了两样料：鸡肉碎（+RM 3）和旁边的一份鸡蛋（+RM 2），合计 RM 16。",
         ms:"Mi tepung kering dengan ikan bilis goreng, serpihan cili dan daun bawang. Mangkuk dalam klip ada dua tambahan: ayam cincang (+RM 3) dan telur di tepi (+RM 2), jumlah RM 16."}},
- {id:"curry-mee",no:2,cat:"noodles",price:11.90,spice:2,allergens:["gluten","soy","shellfish"],options:["lessSpicy","takeaway"],media:{},
-  name:{en:"Curry Mee",zh:"咖喱面",ms:"Mi Kari"},sub:{en:"Coconut curry noodle soup",zh:"椰浆咖喱汤面",ms:"Mi dalam kuah kari santan"},
-  desc:{en:"Yellow noodles and rice vermicelli in coconut curry broth with chicken, tofu puffs, long beans and cockles.",
-        zh:"黄面和米粉配椰浆咖喱汤，加鸡肉、豆卜、长豆和鲜蛤。",
-        ms:"Mi kuning dan bihun dalam kuah kari santan dengan ayam, tauhu pok, kacang panjang dan kerang."}},
- {id:"char-kway-teow",no:3,cat:"noodles",price:11.50,spice:1,allergens:["shellfish","egg","soy"],options:["lessSpicy","noChili","takeaway"],media:{},
+ {id:"curry-mee",no:2,cat:"noodles",price:11.90,spice:2,allergens:["gluten","soy","sesame"],options:["lessSpicy","takeaway"],media:{video:"curry-mee.mp4",poster:"curry-mee.jpg",sample:true},
+  name:{en:"Curry Mee",zh:"咖喱面",ms:"Mi Kari"},sub:{en:"Noodles in creamy coconut curry",zh:"椰浆咖喱面",ms:"Mi dalam kuah kari santan pekat"},
+  desc:{en:"Yellow noodles in a creamy coconut curry sauce with carrot, broccoli and red pepper, topped with coriander and sesame seeds.",
+        zh:"黄面拌浓郁椰浆咖喱酱，配胡萝卜、西兰花和红椒，撒上香菜和芝麻。",
+        ms:"Mi kuning dalam kuah kari santan pekat dengan lobak merah, brokoli dan lada merah, ditabur daun ketumbar dan bijan."}},
+ {id:"char-kway-teow",no:3,cat:"noodles",price:11.50,spice:1,allergens:["shellfish","egg","soy"],options:["lessSpicy","noChili","takeaway"],media:{video:"char-kway-teow.mp4",poster:"char-kway-teow.jpg",sample:true},
   name:{en:"Char Kway Teow",zh:"炒粿条",ms:"Char Kuey Teow"},sub:{en:"Wok-fried flat rice noodles",zh:"大火炒宽河粉",ms:"Kuey teow goreng"},
-  desc:{en:"Flat rice noodles wok-fried with prawns, cockles, bean sprouts, egg and chives in dark soy sauce.",
-        zh:"宽河粉以黑酱油大火快炒，配虾、鲜蛤、豆芽、鸡蛋和韭菜。",
-        ms:"Kuey teow digoreng dengan udang, kerang, taugeh, telur dan kucai dalam kicap pekat."}},
- {id:"nasi-lemak",no:4,cat:"rice",price:12.90,spice:2,allergens:["peanut","fish","egg"],options:["lessSpicy","takeaway"],media:{},
+  desc:{en:"Flat rice noodles wok-fried in dark soy sauce with prawns, Chinese sausage (pork), mushrooms, bean sprouts, egg and chives. Chili paste on the side.",
+        zh:"宽河粉以黑酱油大火快炒，配虾、腊肠（猪肉）、蘑菇、豆芽、鸡蛋和韭菜，旁边附一小碟辣椒酱。",
+        ms:"Kuey teow digoreng dalam kicap pekat dengan udang, sosej Cina (babi), cendawan, taugeh, telur dan kucai. Sambal cili di tepi."}},
+ {id:"nasi-lemak",no:4,cat:"rice",price:12.90,spice:2,allergens:["peanut","fish","egg"],options:["lessSpicy","takeaway"],media:{video:"nasi-lemak.mp4",poster:"nasi-lemak.jpg",sample:true},
   name:{en:"Nasi Lemak Ayam Berempah",zh:"椰浆饭配香料炸鸡",ms:"Nasi Lemak Ayam Berempah"},sub:{en:"Coconut rice with spiced fried chicken",zh:"椰浆饭 · 香料炸鸡",ms:"Nasi santan dengan ayam goreng berempah"},
-  desc:{en:"Coconut rice with spiced fried chicken, sambal, fried anchovies, peanuts, egg and cucumber.",
-        zh:"椰浆饭配香料炸鸡、叁巴辣酱、炸江鱼仔、花生、鸡蛋和黄瓜。",
-        ms:"Nasi santan dengan ayam goreng berempah, sambal, ikan bilis goreng, kacang, telur dan timun."}},
- {id:"roti-canai",no:5,cat:"breads",price:4.00,spice:1,allergens:["gluten","milk"],options:["takeaway"],media:{},
-  name:{en:"Roti Canai (2 pcs)",zh:"印度煎饼（2片）",ms:"Roti Canai (2 keping)"},sub:{en:"Flaky flatbread with dhal and curry",zh:"香脆煎饼配豆咖喱",ms:"Roti rangup bersama kuah dal dan kari"},
-  desc:{en:"Two pieces of flaky griddled flatbread with lentil dhal and curry sauce for dipping.",
-        zh:"两片香脆煎饼，配扁豆咖喱和咖喱汁蘸食。",
-        ms:"Dua keping roti canai rangup dengan kuah dal dan kari untuk dicicah."}},
- {id:"teh-tarik",no:6,cat:"breads",price:3.20,spice:0,allergens:["milk"],options:["lessSweet","iced","takeaway"],media:{},
+  desc:{en:"Coconut rice topped with a fried egg, with two pieces of spiced fried chicken, a boiled egg, sambal, peanuts, fried anchovies, cucumber and fresh chili.",
+        zh:"椰浆饭上放一个煎蛋，配两块香料炸鸡、一个水煮蛋、叁巴辣酱、花生、炸江鱼仔、黄瓜和新鲜辣椒。",
+        ms:"Nasi santan dengan telur goreng di atas, dua ketul ayam goreng berempah, telur rebus, sambal, kacang, ikan bilis goreng, timun dan cili segar."}},
+ {id:"roti-canai",no:5,cat:"breads",price:4.00,spice:1,allergens:["gluten","milk"],options:["takeaway"],media:{video:"roti-canai.mp4",poster:"roti-canai.jpg",sample:true},
+  name:{en:"Roti Canai (2 pcs)",zh:"印度煎饼（2片）",ms:"Roti Canai (2 keping)"},sub:{en:"Flaky flatbread with curry",zh:"香脆煎饼配咖喱",ms:"Roti rangup bersama kuah kari"},
+  desc:{en:"Two pieces of flaky griddled flatbread with a bowl of curry for dipping.",
+        zh:"两片香脆煎饼，配一碗咖喱蘸食。",
+        ms:"Dua keping roti canai rangup dengan semangkuk kuah kari untuk dicicah."}},
+ {id:"teh-tarik",no:6,cat:"breads",price:3.20,spice:0,allergens:["milk"],options:["lessSweet","iced","takeaway"],media:{video:"teh-tarik.mp4",poster:"teh-tarik.jpg",sample:true},
   name:{en:"Teh Tarik",zh:"拉茶",ms:"Teh Tarik"},sub:{en:"Pulled milk tea",zh:"印度拉茶（奶茶）",ms:"Teh susu ditarik"},
   desc:{en:"Strong black tea and condensed milk, poured between two jugs until frothy. Ask for less sweet if you prefer.",
         zh:"浓红茶加炼奶，在两个杯子间来回拉出泡沫，可以要求少甜。",
@@ -240,7 +241,7 @@ const bowl = `<svg viewBox="0 0 48 48" aria-hidden="true" fill="none" stroke="cu
 
 function mediaHTML(d, big){
   const m = d.media || {};
-  if (m.video) return `<video src="${m.video}" ${m.poster?`poster="${m.poster}"`:""} muted loop playsinline ${reduceMotion?"controls":"autoplay"}></video><span class="badge">${tx("aiLabel")}</span>`;
+  if (m.video) return `<video src="${m.video}" ${m.poster?`poster="${m.poster}"`:""} muted loop playsinline ${reduceMotion?"controls":"autoplay"}></video><span class="badge">${tx(m.sample?"aiSample":"aiLabel")}</span>`;
   if (m.poster) return `<img src="${m.poster}" alt=""><span class="badge">${tx("realPhoto")}</span>`;
   return `<div class="slot">${bowl}<span>${tx("slot")}</span></div>`;
 }
